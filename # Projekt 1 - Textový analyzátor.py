@@ -3,7 +3,7 @@
 
 # author: Jiří Požár
 # email: pozar@volny.cz
-# 03/2025
+#
 
 texts = ['''Situated about 10 miles west of Kemmerer,
     Fossil Butte is a ruggedly impressive

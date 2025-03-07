@@ -3,7 +3,7 @@
 
 # author: Jiří Požár
 # email: pozar@volny.cz
-# 03/2025
+#
 
 texts = ['''Situated about 10 miles west of Kemmerer,
     Fossil Butte is a ruggedly impressive
@@ -43,68 +43,65 @@ if users.get(user) == password:
     print("-" * 40)
     print("Welcome to the app,", user)
 else:
-    print("You are not in the list of registered users, "
-          "or you entered the wrong password, "
-          "terminating the program...")
+    print("Unregistered user, terminating the program...")
     exit()
 
 # analyzátor textů - volba textu
 print(f"We have {len(texts)} texts to be analyzed.")
 print("-" * 40)  
-try:
-    choice = int(input(f"Enter a number btw 1 and {len(texts)} to select: ")) - 1
-    if 0 <= choice < len(texts):
-        choice_text = texts[choice]
-    else:
-        print(f"Invalid choice, you were supposed to choose a number "
-               f"btw 1 and {len(texts)}, program terminated.")
-        exit()
-except ValueError:
-    print("Invalid input, you were supposed to choose a number, program terminated.")
+choice = input(f"Enter a number btw 1 and {len(texts)} to select: ")
+print("-" * 40)
+choice = int(choice) - 1
+if 0 <= choice < len(texts):
+    choice_text = texts[choice]
+else:
+    print("Invalid choice, program terminated.")
     exit()
 
 # ANALÝZA TEXTU - 1.část
-words = choice_text.split() # rozdělení textu na slova
-word_count = len(words) # součet slov
+# součet slov   
+word_count = len(choice_text.split())
+# součet slov začínajících velkým písmenem 
 word_titlecase_count = 0
+for word in choice_text.split():
+    if word[0].isupper() and any(char.isdigit() == False for char in word):
+        word_titlecase_count += 1
+# součet slov psaných velkými písmeny        
 word_uppercase_count = 0
+for word in choice_text.split():
+    if word.isupper() and any(char.isdigit() == False for char in word):
+        word_uppercase_count += 1
+# součet slov psaných malými písmeny
 word_lowercase_count = 0
-numeric_string_count = 0
-
-for word in words:
-    if word[0].isupper():
-        word_titlecase_count += 1 # součet slov začínajících velkým písmenem 
-    if word.isupper():
-        word_uppercase_count += 1 # součet slov psaných velkými písmeny 
-    if word.islower():
-        word_lowercase_count += 1 # součet slov psaných malými písmeny
-    if word.isdigit():
-        numeric_string_count += 1 # součet číselných řetězců    
-
-numbers = [int(word) for word in words if word.isdigit()]
-numbers_sum = sum(numbers) # součet hodnot číselných řetězců 
+for word in choice_text.split():
+    if word.islower() and any(char.isdigit() == False for char in word):
+        word_lowercase_count += 1
+# součet číselných řetězců
+numeric_string_count = 0        
+for word in choice_text.split():
+    if word.isdigit() and any(char.isdigit() == True for char in word):
+        numeric_string_count += 1 
+# součet hodnot číselných řetězců        
+numbers = [int(word) for word in choice_text.split() if word.isdigit()]
+numbers_sum = sum(numbers)
 
 # VÝPIS ANALÝZY - 1.část
-print("-" * 40)
 print(f"There are {word_count} words in the selected text.")
 print(f"There are {word_titlecase_count} titlecase words.")
 print(f"There are {word_uppercase_count} uppercase words.")
 print(f"There are {word_lowercase_count} lowercase words.")
-if numeric_string_count == 1:
-    print(f"There is 1 numeric string.")
-else:
-    print(f"There are {numeric_string_count} numeric strings.")
+print(f"There are {numeric_string_count} numeric string.")
 print(f"The sum of all the numbers is {numbers_sum}")
 print("-" * 40)
 
 # ANALÝZA TEXTU s výpisem - 2.část
-len_words = [len(word.strip(",.")) for word in words] # délka jednotlivých slov
-
+# délka jednotlivých slov
+len_words = [len(word.strip(",.")) for word in choice_text.split()]
 # výpis délky slov
-print("LEN |    OCCURRENCES               |NR.")
+print("LEN |    OCCURRENCES     |NR.")
 print("-" * 40)
 for length in sorted(set(len_words)):
     count = len_words.count(length)
     stars = '*' * count
-    print(f"{length:>3} | {stars:<28} | {count:>2}")
-print("-" * 40)
+    print(f"{length:>3} | {stars:<18} | {count}")
+
